@@ -1,13 +1,19 @@
 <script setup>
+import { getBaiscBar } from "@/api/basicapi";
 import BasicBar from "@/components/echarts/barChart/BasicBar.vue";
+import { onMounted, ref } from "vue";
+
+const barData = ref({});
+onMounted(async () => {
+  const res = await getBaiscBar();
+  barData.value = res;
+  console.log(res);
+});
 </script>
 
 <template>
   <div>
-    <BasicBar
-      :xdata="['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']"
-      :ydata="[120, 200, 150, 80, 70, 110, 130]"
-    ></BasicBar>
+    <BasicBar :xdata="barData.xdata" :ydata="barData.ydata"></BasicBar>
   </div>
 </template>
 
