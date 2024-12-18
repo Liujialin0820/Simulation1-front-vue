@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 创建axios实例
 const http = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: import.meta.env.VITE_BASE_URL,
 });
 
 // axios请求拦截器
