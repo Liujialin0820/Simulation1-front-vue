@@ -1,12 +1,11 @@
 <script setup>
-import HomeHeaderVue from "@/components/HomeHeader/HomeHeader.vue";
-
+import HomeHeader from "./components/homeHeader/HomeHeader.vue";
 </script>
 
 <template>
-  <div class="common-layout">
+  <div class="common-layout container">
     <el-container>
-      <el-header><HomeHeaderVue></HomeHeaderVue></el-header>
+      <el-header><HomeHeader></HomeHeader></el-header>
       <el-main><router-view></router-view></el-main>
     </el-container>
   </div>
@@ -62,5 +61,10 @@ textarea {
 
 button {
   cursor: pointer;
+}
+
+.module {
+  border: #000 bord;
+  height: 500px;
 }
 </style>

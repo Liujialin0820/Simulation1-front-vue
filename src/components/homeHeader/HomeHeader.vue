@@ -1,13 +1,12 @@
 <script setup>
-import { ref } from "vue";
+import { computed } from "vue";
+import { useRoute } from "vue-router";
+const route = useRoute(); // 获取当前路由对象
 
-const activeIndex = ref("/");
-const handleSelect = (key, keyPath) => {
-  console.log(key, keyPath);
-};
+const activeIndex = computed(() => {
+  return route.path; // 返回当前路径
+});
 
-// import { useRouter } from "vue-router";
-// const router = useRouter();
 // const logout = () => {
 //   localStorage.clear();
 //   router.push("/");
@@ -20,7 +19,6 @@ const handleSelect = (key, keyPath) => {
     class="el-menu-demo"
     mode="horizontal"
     :ellipsis="false"
-    @select="handleSelect"
     :router="true"
   >
     <el-menu-item>

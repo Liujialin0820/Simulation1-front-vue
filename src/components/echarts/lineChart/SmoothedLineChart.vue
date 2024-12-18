@@ -6,8 +6,8 @@
   ></div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, watch, watchEffect } from "vue";
+<script setup>
+import { ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
 const props = defineProps([
   "xdata",
@@ -17,6 +17,8 @@ const props = defineProps([
   "title",
   "xAxisMinMax",
   "yAxisMinMax",
+  "smooth",
+  "color",
 ]);
 const echartsContainer = ref(null);
 
@@ -57,6 +59,7 @@ onMounted(() => {
         data: props.xdata,
         name: props.xname,
         nameGap: 5,
+        boundaryGap: false, // 取消两端的空白
         min: props.xAxisMinMax ? props.xAxisMinMax[0] : null, // 设置坐标轴的最小值
         max: props.xAxisMinMax ? props.xAxisMinMax[1] : null, // 设置坐标轴的最大值
       },
@@ -84,7 +87,8 @@ onMounted(() => {
         {
           data: props.ydata,
           type: "line",
-          smooth: true,
+          color: props.color,
+          smooth: props.smooth ?? true,
         },
       ],
     };

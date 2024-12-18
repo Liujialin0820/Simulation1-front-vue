@@ -6,7 +6,7 @@
   ></div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
 const props = defineProps([
