@@ -6,36 +6,58 @@
   ></div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+<script>
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import * as echarts from "echarts";
-const props = defineProps([
-  "xdata",
-  "ydata",
-  "xname",
-  "yname",
-  "title",
-  "right_grid",
-  "xAxisMinMax",
-  "yAxisMinMax",
-]);
-const echartsContainer = ref(null);
 
-onMounted(() => {
-  if (echartsContainer.value) {
-    // 初始化 ECharts 实例
-    const myChart = echarts.init(echartsContainer.value);
+export default {
+  props: {
+    xdata: {
+      type: Array,
+      required: true,
+    },
+    ydata: {
+      type: Array,
+      required: true,
+    },
+    xname: {
+      type: String,
+      default: "",
+    },
+    yname: {
+      type: String,
+      default: "",
+    },
+    title: {
+      type: String,
+      default: "",
+    },
+    right_grid: {
+      type: Number,
+      default: 50,
+    },
+    xAxisMinMax: {
+      type: Array,
+      default: () => [null, null],
+    },
+    yAxisMinMax: {
+      type: Array,
+      default: () => [null, null],
+    },
+  },
+  setup(props) {
+    const echartsContainer = ref(null);
+    let myChart = null;
 
-    // 设置图表配置项和数据
-    const option = {
+    // 创建图表配置项
+    const createChartOption = () => ({
       grid: {
         right: props.right_grid,
       },
       title: {
         text: props.title,
         textStyle: {
-          fontSize: 12, // 设置标题字体大小
-          // 其他样式属性
+          fontSize: 12,
         },
       },
       tooltip: {
@@ -45,11 +67,9 @@ onMounted(() => {
         },
         valueFormatter: (value) => {
           if (value > 10) {
-            return parseFloat(value.toFixed(0)).toLocaleString("en-US"); // 将大于10的数字四舍五入为整数
+            return parseFloat(value.toFixed(0)).toLocaleString("en-US");
           } else {
-            if (typeof value == "number") {
-              return value.toFixed(4); // 小于等于10的数字保留一位小数
-            }
+            return value.toFixed(4);
           }
         },
       },
@@ -58,25 +78,25 @@ onMounted(() => {
         data: props.xdata,
         name: props.xname,
         nameGap: 5,
-        min: props.xAxisMinMax ? props.xAxisMinMax[0] : null, // 设置坐标轴的最小值
-        max: props.xAxisMinMax ? props.xAxisMinMax[1] : null, // 设置坐标轴的最大值
+        min: props.xAxisMinMax[0],
+        max: props.xAxisMinMax[1],
       },
       yAxis: {
         type: "value",
         axisLabel: {
-          formatter: function (value) {
-            if (value >= 100000) {
-              return (value / 1000000).toFixed(1) + "M"; // 将大于等于100k的数字转换为M形式
+          formatter: (value) => {
+            if (value >= 1000000) {
+              return (value / 1000000).toFixed(1) + "M";
             } else if (value >= 1000) {
-              return (value / 1000).toFixed(0) + "k"; // 将大于等于1000的数字转换为k形式
+              return (value / 1000).toFixed(0) + "k";
             } else {
-              return value;
+              return value.toString();
             }
           },
-          margin: 2, // 调整纵轴标签与轴线之间的距离
+          margin: 2,
         },
-        min: props.yAxisMinMax ? props.yAxisMinMax[0] : null, // 设置坐标轴的最小值
-        max: props.yAxisMinMax ? props.yAxisMinMax[1] : null, // 设置坐标轴的最小值
+        min: props.yAxisMinMax[0],
+        max: props.yAxisMinMax[1],
       },
       series: [
         {
@@ -85,38 +105,67 @@ onMounted(() => {
           smooth: true,
         },
       ],
+    });
+
+    // 初始化图表
+    const initChart = () => {
+      if (echartsContainer.value) {
+        myChart = echarts.init(echartsContainer.value);
+        myChart.setOption(createChartOption());
+      }
     };
 
-    // 使用配置项和数据绘制图表
-    myChart.setOption(option);
-
-    // 监听数据变化
-    watch(
-      () => props.ydata,
-      (newXdata, oldXdata) => {
-        if (JSON.stringify(newXdata) !== JSON.stringify(oldXdata)) {
-          // 当数据变化时重新渲染图表
-          myChart.setOption({
-            xAxis: {
-              data: props.xdata,
-              name: props.xname,
+    // 更新图表数据
+    const updateChart = () => {
+      if (myChart) {
+        myChart.setOption({
+          xAxis: {
+            data: props.xdata,
+            name: props.xname,
+          },
+          series: [
+            {
+              data: props.ydata,
             },
-            series: [
-              {
-                data: props.ydata,
-              },
-            ],
-          });
-        }
+          ],
+        });
       }
-    );
-  }
-});
+    };
+
+    onMounted(() => {
+      initChart();
+
+      // 监听数据变化
+      watch(
+        () => [props.xdata, props.ydata],
+        ([newXdata, newYdata], [oldXdata, oldYdata]) => {
+          if (
+            JSON.stringify(newXdata) !== JSON.stringify(oldXdata) ||
+            JSON.stringify(newYdata) !== JSON.stringify(oldYdata)
+          ) {
+            updateChart();
+          }
+        }
+      );
+    });
+
+    // 清理图表实例
+    onUnmounted(() => {
+      if (myChart) {
+        myChart.dispose();
+        myChart = null;
+      }
+    });
+
+    return {
+      echartsContainer,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .echarts-container {
-  /* 设置图表容器样式 */
   background-color: white;
 }
 </style>
