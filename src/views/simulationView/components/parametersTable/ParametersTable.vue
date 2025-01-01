@@ -1,45 +1,64 @@
 <script setup>
 import { useSim1Store } from "@/stores/Sim1";
 import { onMounted, ref } from "vue";
-import Histogram_G_IRR from "./Histogram_G_IRR.vue";
-import Histogram_I_IRR from "./Histogram_I_IRR.vue";
-import { updateParameter } from "@/api/basicapi";
+import {
+  createParameters,
+  getParameters,
+  makeBlackScholesSimulation,
+} from "@/api/basicapi";
+import MultiBar from "./MultiBar.vue";
+import StaticTable from "./StaticTable.vue";
 
 const useParameters = useSim1Store();
-let parameters = {};
 const tableData = ref([]);
+let loading = defineModel();
 
 onMounted(() => {
-  updateData();
+  get_parameters();
+  get_data();
+  loading.value = false;
 });
 
-const updateData = async () => {
-  await useParameters.getData();
+//#region parameters
 
-  let data = useParameters.parameters;
-  const formattedData = Object.keys(data).map((key) => ({
-    name: key,
-    value: data[key].value,
-    desc: data[key].desc,
-  }));
-  parameters = formattedData;
-  tableData.value = parameters;
+const get_parameters = async () => {
+  const ref = await getParameters();
+  console.log(ref[ref.length - 1]);
+
+  const transformedParameterData = Object.entries(ref[ref.length - 1])
+    .filter(([key]) => key !== "help_texts") // Exclude the "help_texts" key
+    .map(([key, value]) => ({
+      name: key,
+      value: value,
+      desc: ref[ref.length - 1].help_texts?.[key] || "", // Get help_text or default to an empty string
+    }));
+  console.log(transformedParameterData);
+  tableData.value = transformedParameterData;
 };
 
-const re_simu = () => {
-  updateData();
+const convertToNameValue = (data) => {
+  // 将数组转换为 { name: value } 格式
+  return data.reduce((result, item) => {
+    result[item.name] = item.value;
+    return result;
+  }, {});
 };
 
-const change_parameters = async () => {
-  console.log(tableData.value);
-  await updateParameter(tableData.value);
-  updateData();
+//#endregion
+
+const get_data = async () => {
+  loading.value = true;
+  await useParameters.get_data();
+  loading.value = false;
 };
 
-// 分桶设置
-const bins = ref("100");
-const binstart = ref("min");
-const binend = ref("max");
+const creat_new_data = async () => {
+  loading.value = true;
+  await createParameters(convertToNameValue(tableData.value));
+  await makeBlackScholesSimulation();
+  await useParameters.get_data();
+  loading.value = false;
+};
 </script>
 
 <template>
@@ -55,44 +74,15 @@ const binend = ref("max");
         <el-table-column prop="desc" label="Description" width="180" />
       </el-table>
       <div style="margin-top: 20px">
-        <el-button @click="re_simu">Retry Simulation</el-button>
-        <el-button @click="change_parameters">Change Parameters</el-button>
+        <el-button @click="creat_new_data">Create New Simulation</el-button>
       </div>
     </div>
     <div class="right-column">
-      <div style="height: 400px">
-        <Histogram_I_IRR
-          :binend="binend"
-          :binstart="binstart"
-          :bins="bins"
-        ></Histogram_I_IRR>
+      <div style="height: 600px">
+        <MultiBar></MultiBar>
       </div>
-      <div style="height: 400px">
-        <Histogram_G_IRR
-          :binend="binend"
-          :binstart="binstart"
-          :bins="bins"
-        ></Histogram_G_IRR>
-      </div>
-      <div
-        style="
-          margin-top: -40px;
-          margin-left: 20px;
-          display: flex;
-          z-index: 1000; /* 确保它位于其他元素之上 */
-        "
-      >
-        <div>
-          <el-input v-model="binstart" style="max-width: 160px">
-            <template #prepend>bin start</template>
-          </el-input>
-          <el-input v-model="binend" style="max-width: 160px; margin-left: 5px">
-            <template #prepend>bin end</template>
-          </el-input>
-          <el-input v-model="bins" style="max-width: 180px; margin-left: 5px">
-            <template #prepend>bin number</template>
-          </el-input>
-        </div>
+      <div>
+        <StaticTable></StaticTable>
       </div>
     </div>
   </div>

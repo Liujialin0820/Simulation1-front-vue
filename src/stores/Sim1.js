@@ -1,18 +1,18 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { getBaiscBar } from "@/api/basicapi";
+import { getData } from "@/api/basicapi";
 
 export const useSim1Store = defineStore("sim1Store", () => {
-  const parameters = ref("");
-  const result = ref([]);
-  const id = ref(0);
+  const charData = ref([]);
+  const xAxisData = ref([]);
+  const staticData = ref([]);
 
-  const getData = async () => {
-    const res = await getBaiscBar("Black Scholes");
-    parameters.value = res.Parameters;
-    result.value = res.result;
-    id.value = res.id;
+  const get_data = async () => {
+    const res = await getData();
+    charData.value = res.charData;
+    xAxisData.value = res.xAxisData;
+    staticData.value = res.static_data;
   };
 
-  return { parameters, result, id, getData };
+  return { charData, xAxisData, get_data, staticData };
 });
