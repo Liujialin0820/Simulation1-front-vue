@@ -1,3 +1,4 @@
+import CustomeSimulation from "@/views/customeSimulation/customeSimulation.vue";
 import HomeView from "@/views/homeView/HomeView.vue";
 import SimulationOne from "@/views/simulationView/SimulationOne.vue";
 import { createRouter, createWebHistory } from "vue-router";
@@ -11,9 +12,14 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/simulation",
+      path: "/Blackscholessimulation",
       name: "simulation",
       component: SimulationOne,
+    },
+    {
+      path: "/CustomiseSimulation",
+      name: "CustomiseSimulation",
+      component: CustomeSimulation,
     },
   ],
 });

@@ -17,7 +17,7 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   (res) => res.data,
   (e) => {
-    return Promise.reject(e);
+    alert("bad input parameters");
   }
 );
 

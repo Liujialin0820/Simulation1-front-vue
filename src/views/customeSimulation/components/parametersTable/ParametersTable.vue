@@ -55,7 +55,7 @@ const get_data = async () => {
 const creat_new_data = async () => {
   loading.value = true;
   await createParameters(convertToNameValue(tableData.value));
-  await makeBlackScholesSimulation({ model: "black" });
+  await makeBlackScholesSimulation({ model: "customise" });
   await useParameters.get_data();
   await get_parameters();
   loading.value = false;
@@ -69,11 +69,7 @@ const creat_new_data = async () => {
         <el-table-column prop="name" label="Parameters" width="180" />
         <el-table-column prop="value" label="Value" width="180">
           <template v-slot="scope">
-            <el-input
-              type="number"
-              v-model.number="scope.row.value"
-              :disabled="['I0', 'G0', 'C'].includes(scope.row.name)"
-            />
+            <el-input type="number" v-model.number="scope.row.value" />
           </template>
         </el-table-column>
         <el-table-column prop="desc" label="Description" width="180" />

@@ -1,8 +1,8 @@
 import http from "@/utils/http";
 
-export const makeBlackScholesSimulation = () => {
+export const makeBlackScholesSimulation = (params) => {
   const path = `/simulation01/`;
-  return http.get(path);
+  return http.get(path, { params });
 };
 
 export const getParameters = () => {
