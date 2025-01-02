@@ -69,7 +69,11 @@ const creat_new_data = async () => {
         <el-table-column prop="name" label="Parameters" width="180" />
         <el-table-column prop="value" label="Value" width="180">
           <template v-slot="scope">
-            <el-input type="number" v-model.number="scope.row.value" />
+            <el-input
+              type="number"
+              v-model.number="scope.row.value"
+              :disabled="['C', 'T'].includes(scope.row.name)"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="desc" label="Description" width="180" />

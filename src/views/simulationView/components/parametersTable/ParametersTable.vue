@@ -72,7 +72,7 @@ const creat_new_data = async () => {
             <el-input
               type="number"
               v-model.number="scope.row.value"
-              :disabled="['I0', 'G0', 'C'].includes(scope.row.name)"
+              :disabled="['I0', 'G0', 'C','T'].includes(scope.row.name)"
             />
           </template>
         </el-table-column>
