@@ -24,7 +24,6 @@ onMounted(async () => {
 
 const get_parameters = async () => {
   const ref = await getParameters();
-  console.log(ref[ref.length - 1]);
 
   const transformedParameterData = Object.entries(ref[ref.length - 1])
     .filter(([key]) => key !== "help_texts") // Exclude the "help_texts" key
