@@ -43,15 +43,7 @@ const convertToNameValue = (data) => {
   }, {});
 };
 
-//#endregion
-
-const get_data = async () => {
-  loading.value = true;
-  await useParameters.get_data();
-  loading.value = false;
-};
-
-const creat_new_data = async () => {
+const create_new_data = async () => {
   loading.value = true;
   await createParameters(convertToNameValue(tableData.value));
   await makeBlackScholesSimulation({ model: "black" });
@@ -59,6 +51,21 @@ const creat_new_data = async () => {
   await get_parameters();
   loading.value = false;
 };
+
+//#endregion
+const get_data = async () => {
+  loading.value = true;
+  try {
+    await useParameters.get_data();
+  } catch (error) {
+    console.error('获取数据失败，正在创建新数据:', error);
+    await create_new_data();
+  } finally {
+    loading.value = false;
+  }
+};
+
+
 </script>
 
 <template>
@@ -71,14 +78,14 @@ const creat_new_data = async () => {
             <el-input
               type="number"
               v-model.number="scope.row.value"
-              :disabled="['I0', 'G0', 'C','T'].includes(scope.row.name)"
+              :disabled="['I0', 'G0', 'C', 'T'].includes(scope.row.name)"
             />
           </template>
         </el-table-column>
         <el-table-column prop="desc" label="Description" width="180" />
       </el-table>
       <div style="margin-top: 20px">
-        <el-button @click="creat_new_data">Create New Simulation</el-button>
+        <el-button @click="create_new_data">Create New Simulation</el-button>
       </div>
     </div>
     <div class="right-column">
