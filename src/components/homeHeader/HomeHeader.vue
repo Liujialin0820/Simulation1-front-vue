@@ -22,13 +22,13 @@ const activeIndex = computed(() => {
     :router="true"
   >
     <el-menu-item>
-      <img
+      <!-- <img
         style="width: 200px"
         src="/images/windlestone-logo.png"
         alt="Element logo"
-      />
+      /> -->
+      <el-menu-item index="/">Home</el-menu-item>
     </el-menu-item>
-    <el-menu-item index="/">Home</el-menu-item>
     <el-menu-item index="/simulation/blackscholes"
       >Black Scholes Simulation</el-menu-item
     >
