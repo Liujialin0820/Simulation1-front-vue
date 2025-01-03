@@ -63,6 +63,7 @@ const creat_new_data = async () => {
 </script>
 
 <template>
+  {{ tableData }}
   <div class="parameters">
     <div class="left-column">
       <el-table :data="tableData" style="width: 100%">
@@ -73,7 +74,7 @@ const creat_new_data = async () => {
               type="number"
               @keyup.enter="creat_new_data"
               v-model="scope.row.value"
-              :disabled="['C', 'T'].includes(scope.row.name)"
+              :disabled="['C', 'T', 'G0'].includes(scope.row.name)"
             />
           </template>
         </el-table-column>
