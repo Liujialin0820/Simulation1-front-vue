@@ -1,13 +1,13 @@
 <script setup>
-import Parameters from "./components/parametersTable/ParametersTable.vue";
 import { ref } from "vue";
+import ParametersTable from "./components/parametersTable/ParametersTable.vue";
 
 const loading = ref(false);
 </script>
 
 <template>
   <div v-loading="loading">
-    <Parameters v-model="loading"></Parameters>
+    <ParametersTable v-model="loading"></ParametersTable>
   </div>
 </template>
 

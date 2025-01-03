@@ -25,6 +25,7 @@ const transformStaticData = (staticData) => {
     staticData = staticData ? JSON.parse(staticData) : {}; // 如果为空，设置为默认空对象
   } catch (error) {
     staticData = {}; // 解析失败时提供安全的默认值
+    console.log(error);
   }
   return Object.entries(staticData).map(([key, value]) => ({
     name: key.replace(/_/g, " "), // Replace underscores with spaces for better readability

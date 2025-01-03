@@ -29,8 +29,10 @@ const activeIndex = computed(() => {
       />
     </el-menu-item>
     <el-menu-item index="/">Home</el-menu-item>
-    <el-menu-item index="/Blackscholessimulation">Black Scholes Simulation</el-menu-item>
-    <el-menu-item index="/CustomiseSimulation">Customise Simulation</el-menu-item>
+    <el-menu-item index="/simulation/blackscholes"
+      >Black Scholes Simulation</el-menu-item
+    >
+    <el-menu-item index="/simulation/custom">Customise Simulation</el-menu-item>
     <!-- <el-menu-item @click="logout">Logout</el-menu-item> -->
   </el-menu>
 </template>

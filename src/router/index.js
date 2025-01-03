@@ -1,6 +1,7 @@
-import CustomeSimulation from "@/views/customeSimulation/customeSimulation.vue";
 import HomeView from "@/views/homeView/HomeView.vue";
-import SimulationOne from "@/views/simulationView/SimulationOne.vue";
+import BlackScholesSimulation from "@/views/SimulationOne/BlackScholesSimulation/BlackScholesSimulation.vue";
+import CustomeSimulation from "@/views/SimulationOne/CustomeSimulation/customeSimulation.vue";
+import SimulationOne from "@/views/SimulationOne/SimulationOne.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -12,14 +13,13 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: "/Blackscholessimulation",
+      path: "/simulation",
       name: "simulation",
       component: SimulationOne,
-    },
-    {
-      path: "/CustomiseSimulation",
-      name: "CustomiseSimulation",
-      component: CustomeSimulation,
+      children: [
+        { path: "blackscholes", component: BlackScholesSimulation },
+        { path: "custom", component: CustomeSimulation },
+      ],
     },
   ],
 });

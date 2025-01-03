@@ -6,8 +6,8 @@ import {
   getParameters,
   makeBlackScholesSimulation,
 } from "@/api/basicapi";
-import MultiBar from "@/views/simulationView/components/parametersTable/MultiBar.vue";
-import StaticTable from "@/views/simulationView/components/parametersTable/StaticTable.vue";
+import MultiBar from "./MultiBar.vue";
+import StaticTable from "./StaticTable.vue";
 
 const useParameters = useSim1Store();
 const tableData = ref([]);
