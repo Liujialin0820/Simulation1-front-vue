@@ -63,7 +63,6 @@ const creat_new_data = async () => {
 </script>
 
 <template>
-  {{ tableData }}
   <div class="parameters">
     <div class="left-column">
       <el-table :data="tableData" style="width: 100%">
