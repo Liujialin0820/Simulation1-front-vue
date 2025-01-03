@@ -76,7 +76,7 @@ const get_data = async () => {
             <el-input
               type="number"
               v-model="scope.row.value"
-              @keyup.enter="creat_new_data"
+              @keyup.enter="create_new_data"
               :disabled="['I0', 'G0', 'C', 'T'].includes(scope.row.name)"
             />
           </template>
