@@ -58,14 +58,12 @@ const get_data = async () => {
   try {
     await useParameters.get_data();
   } catch (error) {
-    console.error('获取数据失败，正在创建新数据:', error);
+    console.error("获取数据失败，正在创建新数据:", error);
     await create_new_data();
   } finally {
     loading.value = false;
   }
 };
-
-
 </script>
 
 <template>
@@ -77,7 +75,8 @@ const get_data = async () => {
           <template v-slot="scope">
             <el-input
               type="number"
-              v-model.number="scope.row.value"
+              v-model="scope.row.value"
+              @keyup.enter="creat_new_data"
               :disabled="['I0', 'G0', 'C', 'T'].includes(scope.row.name)"
             />
           </template>

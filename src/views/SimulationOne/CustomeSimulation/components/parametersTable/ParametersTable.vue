@@ -71,7 +71,8 @@ const creat_new_data = async () => {
           <template v-slot="scope">
             <el-input
               type="number"
-              v-model.number="scope.row.value"
+              @keyup.enter="creat_new_data"
+              v-model="scope.row.value"
               :disabled="['C', 'T'].includes(scope.row.name)"
             />
           </template>
